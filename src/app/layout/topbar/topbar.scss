@@ -1,0 +1,5 @@
+.topbar { background: var(--topbar-bg); color: var(--topbar-text); border-bottom: 1px solid var(--border-soft); }
+.brand  { font-weight: 700; letter-spacing: .3px; color: var(--topbar-text); }
+.spacer { flex: 1 1 auto; }
+.menu-btn { margin-right: 8px; display: inline-flex; } /* si querés: ocultar en desktop con media-query */
+button[mat-button] { color: var(--topbar-btn-text); background: var(--topbar-btn-bg); }

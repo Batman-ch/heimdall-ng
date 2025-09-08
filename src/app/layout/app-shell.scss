@@ -1,0 +1,16 @@
+.layout { height: 100vh; }
+
+/* topbar + content en columna */
+.layout .mat-sidenav-content { display: flex; flex-direction: column; }
+
+.content { padding: 16px 20px; flex: 1 1 auto; overflow: auto; }
+
+/* 👉 el ancho se aplica al HOST del drawer */
+mat-sidenav.sidenav { width: 260px; }
+mat-sidenav.sidenav.collapsed { width: 56px; }
+
+/* fondos coherentes */
+.mat-sidenav-container,
+.mat-drawer-container,
+.mat-sidenav-content,
+.mat-drawer-content { background: var(--bg-app); }

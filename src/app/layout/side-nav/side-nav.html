@@ -1,0 +1,46 @@
+<aside class="sidenav-root" [class.collapsed]="collapsed">
+  <!--
+  <div class="nav-header">
+    <span class="title" [class.hide]="collapsed">CENTRO DE ADMINISTRACIÓN</span>
+  </div>
+  -->
+  <mat-nav-list>
+    @for (item of items; track item.path ?? item.label) {
+
+      @if (item.path && !item.children) {
+        <a
+          mat-list-item
+          [routerLink]="item.path"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: item.path === '/' }"
+          (click)="onNavigate()"
+          [matTooltip]="collapsed ? item.label : null"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon class="icon">{{ item.icon }}</mat-icon>
+          <div matListItemTitle class="label">{{ item.label }}</div>
+        </a>
+      }
+
+      @if (item.children?.length) {
+        <div class="nav-header group">
+          <span class="title" [class.hide]="collapsed">{{ item.label | uppercase }}</span>
+        </div>
+
+        @for (child of item.children; track child.path ?? child.label) {
+          <a
+            mat-list-item
+            [routerLink]="child.path"
+            routerLinkActive="active"
+            (click)="onNavigate()"
+            [matTooltip]="collapsed ? child.label : null"
+            matTooltipPosition="right"
+          >
+            <mat-icon matListItemIcon class="icon">{{ child.icon }}</mat-icon>
+            <div matListItemTitle class="label">{{ child.label }}</div>
+          </a>
+        }
+      }
+    }
+  </mat-nav-list>
+</aside>

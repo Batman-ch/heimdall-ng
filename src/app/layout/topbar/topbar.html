@@ -1,0 +1,12 @@
+<!-- topbar.html -->
+<mat-toolbar class="topbar">
+  <button mat-icon-button class="menu-btn" (click)="toggle.emit()" aria-label="Abrir/cerrar menú">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <span class="brand">Chaye Hnos • Admin</span>
+  <span class="spacer"></span>
+  <button mat-button (click)="notify.emit('notifications')">Notificaciones</button>
+  <button mat-button (click)="notify.emit('account')">Cuenta</button>
+</mat-toolbar>
+

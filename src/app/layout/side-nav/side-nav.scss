@@ -1,0 +1,43 @@
+.sidenav-root {
+  height: 100%;
+  background: var(--nav-bg);
+  border-right: 1px solid var(--border-soft);
+  color: var(--nav-text);
+  padding: 0 10px 0 0;
+  &.collapsed {
+    
+    .title { visibility: hidden; } /* mantiene alto del header */
+    .label { display: none; }      /* oculta texto de ítems */
+  }
+}
+
+/* Ícono con tamaño consistente */
+a[mat-list-item] .icon {
+  font-size: 20px;
+  
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Evita quiebres raros del texto */
+a[mat-list-item] .label {
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+/* En mini-rail: ocultar label y centrar icono */
+.sidenav-root.collapsed [matListItemTitle] { display: none;}
+/* 👇 en modo colapsado */
+.sidenav-root.collapsed .mdc-list-item__content {
+  flex: 0 0 auto; /* no ocupa ancho extra */
+}
+.sidenav-root.collapsed [matListItemIcon]  { margin: 0 auto; }
+/* cuando está colapsado, centramos iconos */
+.sidenav-root.collapsed a[mat-list-item] {
+  justify-content: center;
+  padding: 8px 0;
+}
+mat-sidenav.sidenav { --w: 260px; width: var(--w); transition: width .18s ease; }
+mat-sidenav.sidenav.collapsed { --w: 56px; }

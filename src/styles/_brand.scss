@@ -1,0 +1,90 @@
+/* ---------- Colores institucionales ---------- */
+$verde:   #008000;
+$amarillo:#FFD600;
+$blanco:  #EBEAE6;
+$gris:    #878787;
+$grisJD:  #E5E6E6;
+
+/* ---------- CSS variables globales ---------- */
+/* Usamos CSS vars para que todo (Material + tus componentes) las consuma fácil */
+:root {
+  /* Base (fondo general y tarjetas) */
+  --bg-app:        #f7f7f8;      /* leve gris de fondo */
+  --bg-sidenav:    #ffffff;      /* fondo sidebar */
+  --bg-topbar:     #008000;      /* $verde */
+  --bg-card:       #ffffff;
+
+  /* Bordes y separadores */
+  --border-soft:   #E5E6E6;      /* $grisJD */
+
+  /* Texto */
+  --text-strong:   #1f1f1f;
+  --text-normal:   #2b2b2b;
+  --text-muted:    #6b7280;      /* gris accesible */
+
+  /* Marca / acciones */
+  --brand-primary: #008000;      /* $verde */
+  --brand-accent:  #FFD600;      /* $amarillo */
+
+  /* Navegación lateral */
+  --nav-bg:        var(--bg-sidenav);
+  --nav-active-bg: rgba(0,128,0,0.15); /* verde 15% */
+  --nav-hover-bg:  rgba(0,128,0,0.08);
+  --nav-icon:      var(--text-strong);
+  --nav-text:      var(--text-strong);
+
+  /* Links */
+  --link:          #006400;      /* verde más oscuro p/legibilidad */
+  --link-hover:    #004b00;
+
+  /* Topbar */
+  --topbar-bg:     var(--bg-topbar);
+  --topbar-text:   #ffffff;
+  --topbar-btn-bg: transparent;
+  --topbar-btn-text: #ffffff;
+}
+
+/* Tipografía “color principal” (asumimos que es color, no familia) */
+:root {
+  --text-primary:  #878787; /* $fuente-principal = $gris (según tu nota) */
+}
+
+/* Body base */
+html, body {
+  height: 100%;
+  background: var(--bg-app);
+  color: var(--text-normal);
+}
+/* Fondo del contenedor y del content */
+.mat-sidenav-container,
+.mat-drawer-container,
+.mat-sidenav-content,
+.mat-drawer-content {
+  background: var(--bg-app);
+}
+
+/* Fondo del sidenav (lateral) */
+.mat-sidenav,
+.mat-drawer {
+  background: var(--nav-bg) !important;
+}
+
+/* Separador visual entre lateral y contenido (ya no dependemos de colores raros) */
+.mat-sidenav {
+  border-right: 1px solid var(--border-soft);
+}
+/* src/styles/_brand.scss */
+.sidenav-root.collapsed
+  .mat-mdc-list-item
+  .mdc-list-item__content {
+  flex: 0 0 auto !important;   /* no reserve ancho */
+  padding-right: 0 !important;
+}
+
+.sidenav-root.collapsed .mat-mdc-list-item {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  justify-content: center;      /* centra icono */
+}
+
+.nav-header{padding: 10px 10px;}
