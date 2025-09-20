@@ -3,7 +3,7 @@
   background: var(--nav-bg);
   border-right: 1px solid var(--border-soft);
   color: var(--nav-text);
-  padding: 0 10px 0 0;
+  padding: 0 5px 0 5px;
   &.collapsed {
     
     .title { visibility: hidden; } /* mantiene alto del header */

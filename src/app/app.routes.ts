@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AppShellComponent } from './layout/app-shell';
+import { MsalGuard } from '@azure/msal-angular';
 
 export const routes: Routes = [
   {
@@ -17,6 +18,7 @@ export const routes: Routes = [
       {
         // Lazy load de IT
         path: 'it',
+        canActivate: [MsalGuard],  // exige login Microsoft
         loadChildren: () =>
           import('./features/it/it.routes').then(m => m.IT_ROUTES),
         data: { title: 'IT' }
@@ -24,6 +26,7 @@ export const routes: Routes = [
       {
         // Lazy load de Finanzas
         path: 'finance',
+        canActivate: [MsalGuard],  // exige login Microsoft
         loadChildren: () =>
           import('./features/finance/finance.routes').then(m => m.FINANCE_ROUTES),
         data: { title: 'Finanzas' }

@@ -1,5 +1,33 @@
 .topbar { background: var(--topbar-bg); color: var(--topbar-text); border-bottom: 1px solid var(--border-soft); }
-.brand  { font-weight: 700; letter-spacing: .3px; color: var(--topbar-text); }
+.brand  { font-weight: 100; letter-spacing: .3px; color: var(--topbar-text); }
 .spacer { flex: 1 1 auto; }
-.menu-btn { margin-right: 8px; display: inline-flex; } /* si querés: ocultar en desktop con media-query */
+.menu-btn { margin-right: 8px; display: inline-flex; }
 button[mat-button] { color: var(--topbar-btn-text); background: var(--topbar-btn-bg); }
+
+/* Paneles de menú */
+.menu-panel .mat-mdc-menu-content { padding: 0; min-width: 280px; }
+.menu-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; }
+.notif-list { max-height: 320px; overflow: auto; }
+.notif-item.read div[matListItemTitle] { color: #6b7280; }
+.notif-time { font-size: 12px; color: #6b7280; }
+
+/* Avatar */
+.avatar-btn { display: inline-flex; align-items: center; gap: 6px; }
+.avatar {
+  width: 28px; height: 28px; border-radius: 999px; display: inline; place-items: center; padding: 10px;
+  background: #fff; color: #0a5710; font-weight: 500;
+}
+.avatar-lg { width: 44px; height: 44px; border-radius: 999px; display: grid; place-items: center; background: #0a5710; color: #fff; font-weight: 700; }
+.account-head { display: flex; gap: 12px; align-items: center; padding: 12px; }
+.account-name { font-weight: 100; }
+.account-email { font-size: 12px; color: #6b7280; }
+.account-name-short { display: none; }
+
+/* 👇 afecta solo a los íconos dentro de tu topbar */
+.topbar mat-icon {
+  color: var(--brand-accent) !important;
+}
+
+@media (min-width: 992px) {
+  .account-name-short { display: inline; color: var(--topbar-text); font-weight: 100; margin-left: 10px;}
+}
