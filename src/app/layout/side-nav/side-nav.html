@@ -4,43 +4,54 @@
     <span class="title" [class.hide]="collapsed">CENTRO DE ADMINISTRACIÓN</span>
   </div>
   -->
-  <mat-nav-list>
-    @for (item of items; track item.path ?? item.label) {
 
-      @if (item.path && !item.children) {
-        <a
-          mat-list-item
-          [routerLink]="item.path"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: item.path === '/' }"
-          (click)="onNavigate()"
-          [matTooltip]="collapsed ? item.label : null"
-          matTooltipPosition="right"
-        >
-          <mat-icon matListItemIcon class="icon">{{ item.icon }}</mat-icon>
-          <div matListItemTitle class="label">{{ item.label }}</div>
-        </a>
+<mat-nav-list>
+  <!-- Renderizar los items principales -->
+  @for (item of items; track item.key ?? item.path ?? item.label ?? $index) {
+    @if (item.label === 'Contenedores' && item.children?.length) {
+      <!-- Título de sección -->
+      <div class="nav-header section-title" style="padding: 16px 0 8px 16px; font-weight: bold; font-size: 1.1em; letter-spacing: 1px;">
+        <mat-icon class="icon" aria-hidden="true" style="margin-right:4px;">{{ item.icon }}</mat-icon>
+        {{ item.label | uppercase }}
+      </div>
+      <!-- Renderizar los hijos de Contenedores como ítems principales -->
+      @for (child of item.children; track child.key ?? child.path ?? child.label ?? $index) {
+        <ng-container *ngTemplateOutlet="navItemTemplate; context: { $implicit: child, level: 0 }"></ng-container>
       }
+    } @else {
+      <ng-container *ngTemplateOutlet="navItemTemplate; context: { $implicit: item, level: 0 }"></ng-container>
+    }
+  }
+</mat-nav-list>
 
-      @if (item.children?.length) {
-        <div class="nav-header group">
-          <span class="title" [class.hide]="collapsed">{{ item.label | uppercase }}</span>
-        </div>
-
-        @for (child of item.children; track child.path ?? child.label) {
-          <a
-            mat-list-item
-            [routerLink]="child.path"
-            routerLinkActive="active"
-            (click)="onNavigate()"
-            [matTooltip]="collapsed ? child.label : null"
-            matTooltipPosition="right"
-          >
-            <mat-icon matListItemIcon class="icon">{{ child.icon }}</mat-icon>
-            <div matListItemTitle class="label">{{ child.label }}</div>
-          </a>
-        }
+<ng-template #navItemTemplate let-item let-level="level">
+  @if (item.children?.length) {
+    <!-- Padre con hijos -->
+    <div class="nav-parent" [style.paddingLeft.px]="16 + level * 16" (click)="toggleOpen(item.key)" style="cursor:pointer;display:flex;align-items:center;">
+      <mat-icon>{{ isOpen(item.key) ? 'expand_more' : 'chevron_right' }}</mat-icon>
+      <mat-icon class="icon" aria-hidden="true" style="margin-left:4px;">{{ item.icon }}</mat-icon>
+      <span class="title" [class.hide]="collapsed" style="margin-left:8px;">{{ item.label | uppercase }}</span>
+    </div>
+    @if (isOpen(item.key)) {
+      @for (child of item.children; track child.key ?? child.path ?? child.label ?? $index) {
+        <ng-container *ngTemplateOutlet="navItemTemplate; context: { $implicit: child, level: level + 1 }"></ng-container>
       }
     }
-  </mat-nav-list>
+  } @else {
+    <a
+      mat-list-item
+      [routerLink]="item.path"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: item.path === '/' }"
+      (click)="onNavigate()"
+      [matTooltip]="collapsed ? item.label : null"
+      matTooltipPosition="right"
+      [style.paddingLeft.px]="16 + level * 16"
+    >
+      <mat-icon matListItemIcon class="icon">{{ item.icon }}</mat-icon>
+      <div matListItemTitle class="label">{{ item.label }}</div>
+    </a>
+  }
+</ng-template>
+
 </aside>

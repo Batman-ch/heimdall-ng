@@ -1,4 +1,4 @@
-import { Component, ViewChild, signal, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, signal, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { MatSidenav, MatSidenavModule, MatSidenavContainer } from '@angular/material/sidenav';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { RouterOutlet } from '@angular/router';
@@ -17,34 +17,46 @@ const LS_KEY = 'sidenavCollapsed';
   styleUrls: ['./app-shell.scss']
 })
 export class AppShellComponent implements AfterViewInit {
-  @ViewChild('drawer') drawer!: MatSidenav;
+  @ViewChild('drawer') drawer?: MatSidenav;
   @ViewChild(MatSidenavContainer) container!: MatSidenavContainer; // 👈
 
   navItems = NAV_ITEMS;
   isMobile = signal(false);
   collapsed = signal<boolean>(this.readCollapsed());
+  ready = false;
 
-  constructor(private bp: BreakpointObserver) {}
+  constructor(private bp: BreakpointObserver, private cdr: ChangeDetectorRef) {}
 
   ngAfterViewInit(): void {
+     queueMicrotask(() => {
+        this.ready = true;
+        this.cdr.detectChanges();
+      })
     this.bp.observe('(max-width: 768px)').subscribe(res => {
       this.isMobile.set(res.matches);
-      if (res.matches) {
-        this.collapsed.set(false);      // nunca mini-rail en mobile
-        this.drawer.mode = 'over';
-        this.drawer.close();
-      } else {
-        this.drawer.mode = 'side';
-        this.drawer.open();
-        // por si venimos de mobile, re-medir
-        queueMicrotask(() => this.container.updateContentMargins());
-      }
+      const d = this.drawer;
+        if (!d) return; // 👈 guard clave
+
+        this.isMobile.set(res.matches);
+        if (res.matches) {
+          this.collapsed.set(false);
+          d.mode = 'over';
+          d.close();
+        } else {
+          d.mode = 'side';
+          d.open();
+          queueMicrotask(() => this.container?.updateContentMargins());
+        }
+        this.cdr.detectChanges();
     });
   }
-
+  // habilita la UI luego del primer render
+ 
   onToggleFromTopbar(): void {
+    const d = this.drawer;
+    if (!d) return;
     if (this.isMobile()) {
-      this.drawer.toggle();
+      d.toggle();
     } else {
       this.collapsed.update(v => {
         const next = !v;
@@ -52,7 +64,7 @@ export class AppShellComponent implements AfterViewInit {
         return next;
       });
       // 👇 fuerza recalcular márgenes luego del cambio de ancho
-      queueMicrotask(() => this.container.updateContentMargins());
+      queueMicrotask(() => this.container?.updateContentMargins());
     }
   }
 

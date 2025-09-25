@@ -20,7 +20,7 @@ import { NavItem } from '../../core/config/nav.config';
 export class SideNavComponent {
   /** Items a renderizar (inyectados desde AppShell a partir de NAV_ITEMS). */
   @Input() items: NavItem[] = [];
-  
+
   /** true = mini-rail (solo iconos) */
   @Input() collapsed = false;
 
@@ -32,6 +32,22 @@ export class SideNavComponent {
    * El contenedor puede cerrar el sidenav si está en modo "over" (mobile).
    */
   @Output() navigate = new EventEmitter<void>();
+
+  /** Estado de acordeón: guarda los keys de los padres abiertos */
+  openKeys: Set<string> = new Set();
+
+  /** Toggle para abrir/cerrar hijos de un padre */
+  toggleOpen(key: string) {
+    if (this.openKeys.has(key)) {
+      this.openKeys.delete(key);
+    } else {
+      this.openKeys.add(key);
+    }
+  }
+
+  isOpen(key: string): boolean {
+    return this.openKeys.has(key);
+  }
 
   onNavigate() {
     this.navigate.emit();

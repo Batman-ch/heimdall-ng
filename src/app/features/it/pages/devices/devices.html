@@ -1,0 +1,177 @@
+<!-- src/app/features/devices/devices-page.component.html -->
+
+<section class="page">
+  <header class="toolbar">
+    <div class="title">
+      <mat-icon>devices</mat-icon>
+      <h1>Dispositivos</h1>
+    </div>
+
+    <div class="filters">
+      <mat-form-field appearance="outline">
+        <mat-label>Buscar</mat-label>
+        <input matInput [formControl]="searchCtrl" placeholder="hostname, serial, modelo, MAC" />
+        <button *ngIf="searchCtrl.value" matSuffix mat-icon-button aria-label="Clear" (click)="onClearSearch()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Tipo</mat-label>
+        <mat-select [formControl]="typeCtrl">
+          <mat-option [value]="null">Todos</mat-option>
+          <mat-option [value]="1">Notebook/PC</mat-option>
+          <mat-option [value]="2">VM</mat-option>
+          <mat-option [value]="3">Móvil</mat-option>
+          <mat-option [value]="4">Tablet</mat-option>
+          <mat-option [value]="5">Server</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Asignación</mat-label>
+        <mat-select [formControl]="assignedCtrl">
+          <mat-option value="all">Todos</mat-option>
+          <mat-option value="1">Asignados</mat-option>
+          <mat-option value="0">No asignados</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" (click)="reloadFirstPage()">
+        <mat-icon>refresh</mat-icon>
+        Actualizar
+      </button>
+    </div>
+  </header>
+
+  <div class="column-config-panel">
+  <button mat-stroked-button (click)="showColumnConfig.set(!showColumnConfig())">
+      <mat-icon>view_column</mat-icon>
+      Configurar columnas
+    </button>
+    <div *ngIf="showColumnConfig()" class="column-config">
+      <span>Columnas visibles:</span>
+      <ng-container *ngFor="let col of allColumns">
+        <mat-checkbox [checked]="displayedColumns().includes(col.key)" (change)="toggleColumn(col.key)">{{ col.label }}</mat-checkbox>
+      </ng-container>
+    </div>
+  </div>
+  <div class="table-wrap" *ngIf="!loading(); else loadingTpl">
+    <div *ngIf="errorMsg()" class="error">
+      <mat-icon>error_outline</mat-icon>
+      {{ errorMsg() }}
+    </div>
+
+  <table mat-table [dataSource]="devices()" class="mat-elevation-z1">
+
+      <!-- ID -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef (click)="onSort('created_at')">
+          ID
+          <mat-icon class="sort">swap_vert</mat-icon>
+        </th>
+        <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+      </ng-container>
+
+      <!-- Hostname -->
+      <ng-container matColumnDef="hostname">
+        <th mat-header-cell *matHeaderCellDef (click)="onSort('hostname')">
+          Hostname
+          <mat-icon class="sort">swap_vert</mat-icon>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <strong>{{ row.hostname || '—' }}</strong>
+          <div class="sub">{{ row.serial || 'SIN SERIE' }}</div>
+        </td>
+      </ng-container>
+
+      <!-- Serial -->
+      <ng-container matColumnDef="serial">
+        <th mat-header-cell *matHeaderCellDef (click)="onSort('serial')">
+          Serial
+          <mat-icon class="sort">swap_vert</mat-icon>
+        </th>
+        <td mat-cell *matCellDef="let row">{{ row.serial || '—' }}</td>
+      </ng-container>
+
+
+      <!-- SO -->
+      <ng-container matColumnDef="os">
+        <th mat-header-cell *matHeaderCellDef>SO</th>
+        <td mat-cell *matCellDef="let row">{{ row.os || '—' }}</td>
+      </ng-container>
+
+      <!-- Modelo -->
+      <ng-container matColumnDef="model">
+        <th mat-header-cell *matHeaderCellDef>Modelo</th>
+        <td mat-cell *matCellDef="let row">{{ row.model || '—' }}</td>
+      </ng-container>
+
+      <!-- SO -->
+      <!-- Aquí iba una columna duplicada 'id', se elimina para evitar error -->
+      <!-- Owner -->
+      <ng-container matColumnDef="owner">
+        <th mat-header-cell *matHeaderCellDef>Owner</th>
+        <td mat-cell *matCellDef="let row">{{ row.owner && row.owner.trim() ? row.owner : 'Sin asignar' }}</td>
+      </ng-container>
+
+      <!-- Brand -->
+      <ng-container matColumnDef="brand">
+        <th mat-header-cell *matHeaderCellDef>Marca</th>
+        <td mat-cell *matCellDef="let row">{{ row.brandName || '—' }}</td>
+      </ng-container>
+
+      <!-- Type -->
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Tipo</th>
+        <td mat-cell *matCellDef="let row">{{ row.deviceTypeName || '—' }}</td>
+      </ng-container>
+
+      <!-- Assigned -->
+      <ng-container matColumnDef="assigned">
+        <th mat-header-cell *matHeaderCellDef>Asignado</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-icon [class.yes]="row.assigned" [class.no]="!row.assigned">
+            {{ row.assigned ? 'check_circle' : 'radio_button_unchecked' }}
+          </mat-icon>
+        </td>
+      </ng-container>
+
+      <!-- Created -->
+      <ng-container matColumnDef="created_at">
+        <th mat-header-cell *matHeaderCellDef>Creado</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.created_at | date:'yyyy-MM-dd HH:mm' }}
+        </td>
+      </ng-container>
+
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button (click)="viewDevice(row)" aria-label="Ver detalle">
+            <mat-icon>open_in_new</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns(); sticky: true"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns();" (click)="onRowClick(row)" class="row-clickable"></tr>
+    </table>
+
+    <mat-paginator
+      [length]="total()"
+      [pageSize]="pageSize()"
+      [pageIndex]="pageIndex()"
+      [pageSizeOptions]="[10,20,50,100]"
+      (page)="onPaginate($event)">
+    </mat-paginator>
+  </div>
+
+  <ng-template #loadingTpl>
+    <div class="loading">
+      <mat-progress-spinner mode="indeterminate" diameter="36"></mat-progress-spinner>
+      <span>Cargando dispositivos…</span>
+    </div>
+  </ng-template>
+</section>

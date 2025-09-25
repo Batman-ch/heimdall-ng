@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
   styles: [`.crumbs { color: var(--m365-muted); font-size: 13px; }`],
   template: `
     <div class="crumbs">
-    @for (c of crumbs; track c.url; let last = $last) {
+    @for (c of crumbs; track $index; let last = $last) {
       <a [href]="c.url" class="link">{{ c.label }}</a>
       @if (!last) {
         <span> / </span>

@@ -1,0 +1,14 @@
+<section class="device-detail">
+  <h2>Detalle del dispositivo</h2>
+  <div *ngIf="device">
+    <div class="field" *ngFor="let field of deviceFields">
+      <span class="label">{{ field.label }}:</span>
+      <span class="value">{{ device[field.key] }}</span>
+      <button class="edit-btn" (click)="enableEdit(field.key)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <input *ngIf="editingField === field.key" [(ngModel)]="device[field.key]" />
+      <button *ngIf="editingField === field.key" (click)="saveField(field.key)">Guardar</button>
+    </div>
+  </div>
+</section>

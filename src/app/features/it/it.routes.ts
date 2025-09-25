@@ -19,6 +19,18 @@ export const IT_ROUTES: Routes = [
           import('./pages/inventory').then(c => c.Inventory),
         data: { title: 'Inventario' }
       },
+      {
+        path: 'devices',
+        loadComponent: () =>
+          import('./pages/devices/devices').then(c => c.devices),
+        data: { title: 'Devices' }
+      },
+      {
+        path: 'devices/:id',
+        loadComponent: () =>
+          import('./pages/devices/device-detail/device-detail').then(c => c.DeviceDetailComponent),
+        data: { title: 'Detalle dispositivo' }
+      },
       // aquí más páginas: devices, maintenance, etc.
     ]
   }

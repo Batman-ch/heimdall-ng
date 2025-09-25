@@ -1,11 +1,15 @@
+
 <app-topbar (toggle)="onToggleFromTopbar()" (notify)="onTopbar($event)" />
 <!-- 👇 autosize hace que el container re-calcule los márgenes cuando cambia el tamaño del sidenav -->
+
+
 
 <mat-sidenav-container class="layout" [autosize]="true">
   <mat-sidenav
     #drawer
     class="sidenav"
     [class.collapsed]="!isMobile() && collapsed()"
+    [autoFocus]="false"
   >
     <app-side-nav
       [items]="navItems"
