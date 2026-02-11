@@ -23,6 +23,8 @@ export interface Device {
   owner?: { id: number; name: string; email: string | null } | null;
   brand?: { id: number; name: string } | null;
   device_type?: { id: number; name: string; slug?: string | null } | null;
+  type?: { id: number; name: string; slug?: string | null } | null; // alias de device_type
+  accounts?: Array<{ id: number; username: string; email?: string }> | null; // relación con usuarios
   created_at: string;
   updated_at: string;
 }
@@ -40,6 +42,12 @@ export interface Paginated<T> {
     total: number;
   };
 }
+
+export type DeviceTypeStat = {
+  id: number;
+  name: string;
+  count: number;
+};
 
 @Injectable({ providedIn: 'root' })
 export class DeviceService {
@@ -70,5 +78,22 @@ export class DeviceService {
     let p = new HttpParams();
     if (include) p = p.set('include', include);
     return this.http.get<Device>(`/devices/${id}`, { params: p });
+  }
+
+  typeStats(params?: {
+    assigned?: boolean;
+    owner_id?: number;
+    device_type_id?: number;
+  }) {
+    let p = new HttpParams();
+    if (params) {
+      Object.entries(params).forEach(([k, v]) => {
+        if (v !== undefined && v !== null) p = p.set(k, String(v));
+      });
+    }
+    return this.http.get<{ data: DeviceTypeStat[]; total: number }>(
+      '/devices/type-stats',
+      { params: p }
+    );
   }
 }

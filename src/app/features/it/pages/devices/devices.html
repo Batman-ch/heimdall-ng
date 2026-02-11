@@ -1,6 +1,20 @@
 <!-- src/app/features/devices/devices-page.component.html -->
 
 <section class="page">
+  <div class="platform-cards">
+    @for (p of platformCards(); track p.key) {
+      <div class="platform-card">
+        <div class="platform-icon">
+          <mat-icon>{{ p.icon }}</mat-icon>
+        </div>
+        <div class="platform-info">
+          <div class="platform-title">{{ p.label }}</div>
+          <div class="platform-count">{{ p.count }} dispositivos</div>
+        </div>
+      </div>
+    }
+  </div>
+
   <header class="toolbar">
     <div class="title">
       <mat-icon>devices</mat-icon>
@@ -112,7 +126,10 @@
       <!-- Owner -->
       <ng-container matColumnDef="owner">
         <th mat-header-cell *matHeaderCellDef>Owner</th>
-        <td mat-cell *matCellDef="let row">{{ row.owner && row.owner.trim() ? row.owner : 'Sin asignar' }}</td>
+        <td mat-cell *matCellDef="let row">
+          <strong>{{ row.owner && row.owner.trim() ? row.owner : 'Sin asignar' }}</strong>
+          <div class="sub" *ngIf="row.ownerEmail">{{ row.ownerEmail }}</div>
+        </td>
       </ng-container>
 
       <!-- Brand -->

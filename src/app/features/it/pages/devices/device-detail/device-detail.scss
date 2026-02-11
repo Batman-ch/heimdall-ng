@@ -1,33 +1,110 @@
 .device-detail {
-  max-width: 600px;
+  max-width: 980px;
   margin: 0 auto;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  padding: 24px;
+  padding: 20px;
 }
-.field {
+
+.detail-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  box-shadow: var(--elev-1);
+  padding: 20px;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+
+  h2 {
+    margin: 0;
+    font-size: 22px;
+    color: var(--text-strong);
+  }
+
+  .subtitle {
+    margin: 4px 0 0;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+}
+
+.section {
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f6f7f2;
+  padding: 10px 14px;
+  font-weight: 700;
+  color: var(--text-strong);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: var(--brand-primary);
+  }
+}
+
+.section-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 12px;
+  padding: 10px 14px;
+  border-top: 1px solid #edf0e7;
+  font-size: 14px;
+}
+
+.row:nth-child(-n + 2) {
+  border-top: none;
+}
+
+.row-label {
+  color: var(--text-muted);
+}
+
+.row-value {
+  color: var(--text-strong);
+  font-weight: 600;
+}
+
+.empty-state {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 16px;
+  color: var(--text-muted);
+  padding: 24px 0;
+
+  mat-icon {
+    color: var(--brand-primary);
+  }
 }
-.label {
-  font-weight: 600;
-  min-width: 120px;
-}
-.value {
-  flex: 1;
-}
-.edit-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #1976d2;
-}
-input {
-  flex: 1;
-  padding: 4px 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+
+@media (max-width: 900px) {
+  .section-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
 }

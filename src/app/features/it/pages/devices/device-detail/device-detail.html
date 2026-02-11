@@ -1,14 +1,34 @@
 <section class="device-detail">
-  <h2>Detalle del dispositivo</h2>
-  <div *ngIf="device">
-    <div class="field" *ngFor="let field of deviceFields">
-      <span class="label">{{ field.label }}:</span>
-      <span class="value">{{ device[field.key] }}</span>
-      <button class="edit-btn" (click)="enableEdit(field.key)">
-        <mat-icon>edit</mat-icon>
-      </button>
-      <input *ngIf="editingField === field.key" [(ngModel)]="device[field.key]" />
-      <button *ngIf="editingField === field.key" (click)="saveField(field.key)">Guardar</button>
+  <div class="detail-card">
+    <div class="detail-header">
+      <div>
+        <h2>Detalle del dispositivo</h2>
+        <p class="subtitle">Ficha completa del equipo</p>
+      </div>
+    </div>
+
+    <div *ngIf="!device" class="empty-state">
+      <mat-icon>devices</mat-icon>
+      <p>No se encontro informacion del dispositivo.</p>
+    </div>
+
+    <div *ngIf="device">
+      @for (section of sections; track section.title) {
+        <div class="section">
+          <div class="section-header">
+            <mat-icon>{{ section.icon }}</mat-icon>
+            <span>{{ section.title }}</span>
+          </div>
+          <div class="section-grid">
+            @for (row of section.rows; track row.label) {
+              <div class="row">
+                <div class="row-label">{{ row.label }}</div>
+                <div class="row-value">{{ row.value }}</div>
+              </div>
+            }
+          </div>
+        </div>
+      }
     </div>
   </div>
 </section>
