@@ -10,9 +10,9 @@
   @for (item of items; track item.key ?? item.path ?? item.label ?? $index) {
     @if (item.label === 'Contenedores' && item.children?.length) {
       <!-- Título de sección -->
-      <div class="nav-header section-title" style="padding: 16px 0 8px 16px; font-weight: bold; font-size: 1.1em; letter-spacing: 1px;">
-        <mat-icon class="icon" aria-hidden="true" style="margin-right:4px;">{{ item.icon }}</mat-icon>
-        {{ item.label | uppercase }}
+      <div class="nav-section-title">
+        <mat-icon class="icon" aria-hidden="true">{{ item.icon }}</mat-icon>
+        <span class="section-label">{{ item.label | uppercase }}</span>
       </div>
       <!-- Renderizar los hijos de Contenedores como ítems principales -->
       @for (child of item.children; track child.key ?? child.path ?? child.label ?? $index) {
@@ -27,10 +27,16 @@
 <ng-template #navItemTemplate let-item let-level="level">
   @if (item.children?.length) {
     <!-- Padre con hijos -->
-    <div class="nav-parent" [style.paddingLeft.px]="16 + level * 16" (click)="toggleOpen(item.key)" style="cursor:pointer;display:flex;align-items:center;">
+    <div
+      class="nav-parent"
+      [style.paddingLeft.px]="16 + level * 16"
+      (click)="toggleOpen(item.key)"
+      [matTooltip]="item.label"
+      matTooltipPosition="right"
+    >
       <mat-icon>{{ isOpen(item.key) ? 'expand_more' : 'chevron_right' }}</mat-icon>
-      <mat-icon class="icon" aria-hidden="true" style="margin-left:4px;">{{ item.icon }}</mat-icon>
-      <span class="title" [class.hide]="collapsed" style="margin-left:8px;">{{ item.label | uppercase }}</span>
+      <mat-icon class="icon" aria-hidden="true">{{ item.icon }}</mat-icon>
+      <span class="title" [class.hide]="collapsed">{{ item.label | uppercase }}</span>
     </div>
     @if (isOpen(item.key)) {
       @for (child of item.children; track child.key ?? child.path ?? child.label ?? $index) {
@@ -44,7 +50,7 @@
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: item.path === '/' }"
       (click)="onNavigate()"
-      [matTooltip]="collapsed ? item.label : null"
+      [matTooltip]="item.label"
       matTooltipPosition="right"
       [style.paddingLeft.px]="16 + level * 16"
     >

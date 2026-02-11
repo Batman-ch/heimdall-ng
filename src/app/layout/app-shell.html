@@ -20,10 +20,13 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
-    
-    <div class="content compact">
+    <div class="breadcrumbs-row">
       <app-breadcrumbs />
-      <router-outlet />
+    </div>
+    <div class="content compact">
+      <div class="content-shell">
+        <router-outlet />
+      </div>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

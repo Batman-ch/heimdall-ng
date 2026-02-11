@@ -1,69 +1,88 @@
 <mat-toolbar class="topbar">
-  <button mat-icon-button class="menu-btn" (click)="toggle.emit()" aria-label="Abrir/cerrar menú">
-    <mat-icon>menu</mat-icon>
-  </button>
+  <div class="topbar-row">
+    <div class="topbar-left">
+      <button mat-icon-button class="menu-btn" (click)="toggle.emit()" aria-label="Abrir/cerrar menú">
+        <mat-icon>menu</mat-icon>
+      </button>
 
-  <span class="brand">Chaye Hnos • Admin</span>
-  <span class="spacer"></span>
-
-  @if (!isLoggedIn()) {
-    <button mat-raised-button color="primary" (click)="login()">Iniciar sesión</button>
-  } @else {
-
-    <!-- Notificaciones -->
-    <button mat-icon-button [matMenuTriggerFor]="notifMenu" matBadge="{{ unreadCount() }}" matBadgeHidden="{{ unreadCount() === 0 }}"
-            matBadgeColor="warn" matTooltip="Notificaciones">
-      <mat-icon>notifications</mat-icon>
-    </button>
-    <mat-menu #notifMenu="matMenu" class="menu-panel">
-      <div class="menu-header">
-        <span>Notificaciones</span>
-        <button mat-button (click)="markAllRead()">Marcar todas como leídas</button>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="notif-list">
-        <mat-nav-list>
-          @for (n of notifications(); track n.id) {
-            <a mat-list-item class="notif-item" [class.read]="n.read">
-              <div matListItemTitle>{{ n.title }}</div>
-              <div matListItemLine class="notif-time">{{ n.time }}</div>
-            </a>
-          }
-        </mat-nav-list>
-      </div>
-      <mat-divider></mat-divider>
-      <button mat-menu-item>Ver todas</button>
-    </mat-menu>
-
-    <!-- Configuración -->
-    <button mat-icon-button [matMenuTriggerFor]="settingsMenu" matTooltip="Configuración">
-      <mat-icon>settings</mat-icon>
-    </button>
-    <mat-menu #settingsMenu="matMenu" class="menu-panel">
-      <button mat-menu-item routerLink="/settings"><mat-icon>tune</mat-icon><span>Preferencias</span></button>
-      <button mat-menu-item routerLink="/settings/appearance"><mat-icon>palette</mat-icon><span>Apariencia</span></button>
-      <button mat-menu-item routerLink="/settings/notifications"><mat-icon>notifications_active</mat-icon><span>Notificaciones</span></button>
-    </mat-menu>
-
-    <!-- Cuenta / Avatar -->
-    <button mat-button [matMenuTriggerFor]="accountMenu" class="avatar-btn">
-      <span class="avatar">{{ initials() }}</span>
-      <span class="account-name-short">{{ displayName() }}</span>
-      <mat-icon>expand_more</mat-icon>
-    </button>
-    <mat-menu #accountMenu="matMenu" class="menu-panel account-panel">
-      <div class="account-head">
-        <div class="avatar avatar-lg">{{ initials() }}</div>
-        <div>
-          <div class="account-name">{{ displayName() }}</div>
-          <div class="account-email">{{ email() }}</div>
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">JD</span>
+        <div class="brand-text">
+          <span class="brand-title">Chaye Hnos</span>
+          <span class="brand-subtitle">ExpertConnect</span>
         </div>
       </div>
-      <mat-divider></mat-divider>
-      <a mat-menu-item href="https://myaccount.microsoft.com" target="_blank" rel="noopener">
-        <mat-icon>account_circle</mat-icon><span>Ver cuenta</span>
-      </a>
-      <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon><span>Cerrar sesión</span></button>
-    </mat-menu>
-  }
+
+      <button type="button" class="pill-btn">FAQ's</button>
+    </div>
+
+    <div class="topbar-center">
+      <div class="search">
+        <mat-icon>search</mat-icon>
+        <input type="search" placeholder="Buscar" aria-label="Buscar" />
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      @if (!isLoggedIn()) {
+        <button mat-raised-button color="primary" (click)="login()">Iniciar sesión</button>
+      } @else {
+        <!-- Notificaciones -->
+        <button mat-icon-button [matMenuTriggerFor]="notifMenu" matBadge="{{ unreadCount() }}" matBadgeHidden="{{ unreadCount() === 0 }}"
+                matBadgeColor="warn" matTooltip="Notificaciones">
+          <mat-icon>notifications</mat-icon>
+        </button>
+        <mat-menu #notifMenu="matMenu" class="menu-panel">
+          <div class="menu-header">
+            <span>Notificaciones</span>
+            <button mat-button (click)="markAllRead()">Marcar todas como leídas</button>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="notif-list">
+            <mat-nav-list>
+              @for (n of notifications(); track n.id) {
+                <a mat-list-item class="notif-item" [class.read]="n.read">
+                  <div matListItemTitle>{{ n.title }}</div>
+                  <div matListItemLine class="notif-time">{{ n.time }}</div>
+                </a>
+              }
+            </mat-nav-list>
+          </div>
+          <mat-divider></mat-divider>
+          <button mat-menu-item>Ver todas</button>
+        </mat-menu>
+
+        <!-- Configuración -->
+        <button mat-icon-button [matMenuTriggerFor]="settingsMenu" matTooltip="Configuración">
+          <mat-icon>settings</mat-icon>
+        </button>
+        <mat-menu #settingsMenu="matMenu" class="menu-panel">
+          <button mat-menu-item routerLink="/settings"><mat-icon>tune</mat-icon><span>Preferencias</span></button>
+          <button mat-menu-item routerLink="/settings/appearance"><mat-icon>palette</mat-icon><span>Apariencia</span></button>
+          <button mat-menu-item routerLink="/settings/notifications"><mat-icon>notifications_active</mat-icon><span>Notificaciones</span></button>
+        </mat-menu>
+
+        <!-- Cuenta / Avatar -->
+        <button mat-button [matMenuTriggerFor]="accountMenu" class="avatar-btn">
+          <span class="avatar">{{ initials() }}</span>
+          <span class="account-name-short">{{ displayName() }}</span>
+          <mat-icon>expand_more</mat-icon>
+        </button>
+        <mat-menu #accountMenu="matMenu" class="menu-panel account-panel">
+          <div class="account-head">
+            <div class="avatar avatar-lg">{{ initials() }}</div>
+            <div>
+              <div class="account-name">{{ displayName() }}</div>
+              <div class="account-email">{{ email() }}</div>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+          <a mat-menu-item href="https://myaccount.microsoft.com" target="_blank" rel="noopener">
+            <mat-icon>account_circle</mat-icon><span>Ver cuenta</span>
+          </a>
+          <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon><span>Cerrar sesión</span></button>
+        </mat-menu>
+      }
+    </div>
+  </div>
 </mat-toolbar>

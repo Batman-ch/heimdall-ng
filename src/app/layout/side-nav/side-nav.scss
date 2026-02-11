@@ -3,17 +3,72 @@
   background: var(--nav-bg);
   border-right: 1px solid var(--border-soft);
   color: var(--nav-text);
-  padding: 0 5px 0 5px;
+  padding: 14px 10px;
+  overflow: hidden;
   &.collapsed {
-    
+    padding: 10px 6px;
     .title { visibility: hidden; } /* mantiene alto del header */
     .label { display: none; }      /* oculta texto de ítems */
   }
 }
 
+.mat-mdc-nav-list { padding: 0; }
+
+.nav-section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 10px 6px;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.sidenav-root.collapsed .nav-section-title {
+  display: none;
+}
+
+.nav-section-title .icon {
+  font-size: 16px;
+}
+
+.nav-parent {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  margin: 2px 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text-normal);
+}
+
+.sidenav-root.collapsed .nav-parent {
+  justify-content: center;
+  padding: 0;
+  margin: 4px 6px;
+}
+
+.sidenav-root.collapsed .nav-parent mat-icon:first-child {
+  display: none;
+}
+
+.nav-parent:hover { background: var(--nav-hover-bg); }
+
+.nav-parent .icon { font-size: 18px; }
+
+.nav-parent .title {
+  margin-left: 6px;
+  font-size: 11px;
+  letter-spacing: 0.6px;
+  color: var(--text-muted);
+}
+
 /* Ícono con tamaño consistente */
 a[mat-list-item] .icon {
-  font-size: 20px;
+  font-size: 18px;
   
   display: inline-flex;
   align-items: center;
@@ -25,6 +80,26 @@ a[mat-list-item] .icon {
 a[mat-list-item] .label {
   white-space: nowrap;
   line-height: 1.2;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+a[mat-list-item] {
+  border-radius: 8px;
+  margin: 4px 6px;
+  height: 36px;
+  transition: background 0.12s ease, color 0.12s ease;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+a[mat-list-item]:hover { background: var(--nav-hover-bg); }
+
+a[mat-list-item].active {
+  background: var(--nav-active-bg);
+  border-left: 3px solid var(--brand-primary);
+  padding-left: 10px;
 }
 
 /* En mini-rail: ocultar label y centrar icono */
@@ -37,7 +112,7 @@ a[mat-list-item] .label {
 /* cuando está colapsado, centramos iconos */
 .sidenav-root.collapsed a[mat-list-item] {
   justify-content: center;
-  padding: 8px 0;
+  padding: 6px 0;
 }
 mat-sidenav.sidenav { --w: 260px; width: var(--w); transition: width .18s ease; }
 mat-sidenav.sidenav.collapsed { --w: 56px; }

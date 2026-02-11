@@ -9,27 +9,27 @@ $grisJD:  #E5E6E6;
 /* Usamos CSS vars para que todo (Material + tus componentes) las consuma fácil */
 :root {
   /* Base (fondo general y tarjetas) */
-  --bg-app:        #f7f7f8;      /* leve gris de fondo */
-  --bg-sidenav:    #ffffff;      /* fondo sidebar */
-  --bg-topbar:     #008000;      /* $verde */
+  --bg-app:        #f5f6f2;      /* gris calido */
+  --bg-sidenav:    #ffffff;      /* fondo blanco */
+  --bg-topbar:     #ffffff;      /* header claro */
   --bg-card:       #ffffff;
 
   /* Bordes y separadores */
-  --border-soft:   #E5E6E6;      /* $grisJD */
+  --border-soft:   #e2e6dd;      /* separador claro */
 
   /* Texto */
-  --text-strong:   #1f1f1f;
-  --text-normal:   #2b2b2b;
-  --text-muted:    #6b7280;      /* gris accesible */
+  --text-strong:   #1f2a1f;
+  --text-normal:   #2a332a;
+  --text-muted:    #6c756c;
 
   /* Marca / acciones */
-  --brand-primary: #008000;      /* $verde */
-  --brand-accent:  #FFD600;      /* $amarillo */
+  --brand-primary: #2f7d32;
+  --brand-accent:  #f2c400;
 
   /* Navegación lateral */
   --nav-bg:        var(--bg-sidenav);
-  --nav-active-bg: rgba(0,128,0,0.15); /* verde 15% */
-  --nav-hover-bg:  rgba(0,128,0,0.08);
+  --nav-active-bg: #ddeacc;
+  --nav-hover-bg:  #e7f2da;
   --nav-icon:      var(--text-strong);
   --nav-text:      var(--text-strong);
 
@@ -39,9 +39,18 @@ $grisJD:  #E5E6E6;
 
   /* Topbar */
   --topbar-bg:     var(--bg-topbar);
-  --topbar-text:   #ffffff;
+  --topbar-text:   var(--text-strong);
   --topbar-btn-bg: transparent;
-  --topbar-btn-text: #ffffff;
+  --topbar-btn-text: var(--text-strong);
+  --topbar-border: var(--border-soft);
+
+  /* Search */
+  --search-bg: #f3f5f1;
+  --search-text: var(--text-normal);
+  --search-placeholder: #7a847a;
+
+  /* Elevation */
+  --elev-1: 0 1px 2px rgba(0, 0, 0, 0.06), 0 6px 18px rgba(0, 0, 0, 0.06);
 }
 
 /* Tipografía “color principal” (asumimos que es color, no familia) */

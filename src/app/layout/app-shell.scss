@@ -3,11 +3,38 @@
 /* topbar + content en columna */
 .layout .mat-sidenav-content { display: flex; flex-direction: column; }
 
-.content { padding: 16px 20px; flex: 1 1 auto; overflow: auto; }
+.content { padding: 20px 24px; flex: 1 1 auto; overflow: auto; }
+
+.breadcrumbs-row {
+	padding: 8px 24px;
+	border-bottom: 1px solid var(--border-soft);
+	background: var(--bg-topbar);
+}
+
+.content-shell {
+	background: var(--bg-card);
+	border: 1px solid var(--border-soft);
+	border-radius: 10px;
+	box-shadow: var(--elev-1);
+	padding: 20px;
+	min-height: calc(100vh - 150px);
+}
 
 /* 👉 el ancho se aplica al HOST del drawer */
-mat-sidenav.sidenav { width: 260px; }
+mat-sidenav.sidenav { width: 240px; }
 mat-sidenav.sidenav.collapsed { width: 56px; }
+
+mat-sidenav.sidenav .mat-drawer-inner-container {
+	overflow: hidden !important;
+}
+
+mat-sidenav.sidenav {
+	overflow: hidden !important;
+}
+
+::ng-deep mat-sidenav.sidenav .mat-drawer-inner-container {
+	overflow: hidden !important;
+}
 
 /* fondos coherentes */
 .mat-sidenav-container,

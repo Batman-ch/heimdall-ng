@@ -22,12 +22,20 @@ export class BreadcrumbsService {
     );
   }
 
+  buildNow(): Crumb[] {
+    return this._build(this.router.routerState.root ?? this.route.root);
+  }
+
   private _build(route: ActivatedRoute, url: string = '', crumbs: Crumb[] = []): Crumb[] {
     const children = route.children;
     if (!children || children.length === 0) return crumbs;
 
     for (const child of children) {
-      const routeURL = child.snapshot.url.map(s => s.path).join('/');
+      if (!child?.snapshot) {
+        continue;
+      }
+
+      const routeURL = child.snapshot.url?.map(s => s.path).join('/') ?? '';
       if (routeURL) url += `/${routeURL}`;
 
       const title = child.snapshot.data['title'];
