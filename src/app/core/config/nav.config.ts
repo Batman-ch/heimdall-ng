@@ -24,7 +24,12 @@ export const NAV_ITEMS: NavItem[] = [
           { label: 'Devices',  icon: 'devices',   path: '/it/devices' , key: 'it-devices'},
         ]
       },
-      { label: 'Finanzas', icon: 'account_balance',   path: '/finance' , key: 'finance-dashboard'},
+      { label: 'Finanzas', icon: 'account_balance',   path: '/finance' , key: 'finance-dashboard',
+        children: [
+          { label: 'Pagos John Deere', icon: 'receipt_long', path: '/finance/john-deere', key: 'finance-john-deere' },
+          { label: 'Facturas John Deere', icon: 'description', path: '/finance/invoices', key: 'finance-john-deere-invoices' }
+        ]
+      },
       
     ]
   }
