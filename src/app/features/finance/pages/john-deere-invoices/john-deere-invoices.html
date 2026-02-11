@@ -1,0 +1,321 @@
+<div class="invoices-container">
+  <div class="header">
+    <div class="title-section">
+      <h1>
+        <mat-icon>description</mat-icon>
+        Facturas John Deere
+      </h1>
+      <p>Busqueda, estado y descarga de facturas procesadas</p>
+    </div>
+
+    <div class="header-actions">
+      <button mat-stroked-button color="primary" (click)="openUploadDialog()">
+        <mat-icon>upload_file</mat-icon>
+        Subir facturas
+      </button>
+      <button mat-raised-button color="primary" (click)="refreshAll()">
+        <mat-icon>refresh</mat-icon>
+        Actualizar
+      </button>
+    </div>
+  </div>
+
+  @if (loadingSummary()) {
+    <div class="stats-loading">
+      <mat-spinner diameter="30"></mat-spinner>
+    </div>
+  } @else if (summary()) {
+    <div class="stats-grid">
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon total">
+            <mat-icon>summarize</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ summary()!.total }}</div>
+            <div class="stat-label">Total</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon moved">
+            <mat-icon>drive_file_move</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ statusCounts()['moved'] || 0 }}</div>
+            <div class="stat-label">Movidas</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon pending">
+            <mat-icon>hourglass_empty</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ statusCounts()['pending'] || 0 }}</div>
+            <div class="stat-label">Pendientes</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon exists">
+            <mat-icon>content_copy</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ statusCounts()['exists'] || 0 }}</div>
+            <div class="stat-label">Duplicadas</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon error">
+            <mat-icon>error</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ statusCounts()['error'] || 0 }}</div>
+            <div class="stat-label">Errores</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <mat-card class="category-card">
+      <mat-card-content>
+        <div class="category-header">
+          <mat-icon>folder</mat-icon>
+          <span>Categorias</span>
+        </div>
+        <div class="category-chips">
+          @for (item of (categoryCounts() | keyvalue); track item.key) {
+            <mat-chip>{{ item.key }} ({{ item.value }})</mat-chip>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  <mat-card class="process-card">
+    <mat-card-content>
+      <div class="process-header">
+        <div>
+          <h3>Estado de procesamiento</h3>
+          <p>Consulta el avance de un job por ID</p>
+        </div>
+        <div class="process-input">
+          <mat-form-field appearance="outline">
+            <mat-label>ID de proceso</mat-label>
+            <input matInput [formControl]="processId" placeholder="Ej: 5">
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="checkProcessStatus()">
+            Consultar
+          </button>
+        </div>
+      </div>
+
+      @if (processLoading()) {
+        <div class="process-loading">
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </div>
+      } @else if (processError()) {
+        <div class="process-error">
+          <mat-icon>error</mat-icon>
+          <span>{{ processError() }}</span>
+        </div>
+      } @else if (processStatus()) {
+        <div class="process-status">
+          <div class="status-item">
+            <span class="label">Estado</span>
+            <span class="value">{{ processStatus()!.status }}</span>
+          </div>
+          <div class="status-item">
+            <span class="label">Progreso</span>
+            <span class="value">{{ processStatus()!.progress | number:'1.0-2' }}%</span>
+          </div>
+          <div class="status-item">
+            <span class="label">Procesadas</span>
+            <span class="value">{{ processStatus()!.processed_files }} / {{ processStatus()!.total_files }}</span>
+          </div>
+          <div class="status-item">
+            <span class="label">Actual</span>
+            <span class="value">{{ processStatus()!.current_file || '-' }}</span>
+          </div>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="filters-card">
+    <mat-card-content>
+      <form [formGroup]="filtersForm" class="filters-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Busqueda general</mat-label>
+          <input matInput formControlName="q" placeholder="Archivo, codigo, texto">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Archivo</mat-label>
+          <input matInput formControlName="file_name" placeholder="invoice_001.pdf">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Codigo</mat-label>
+          <input matInput formControlName="code" placeholder="INV-2026-001">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Categoria</mat-label>
+          <input matInput formControlName="category" placeholder="facturas">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="status">
+            <mat-option value="">Todos</mat-option>
+            <mat-option value="pending">Pendiente</mat-option>
+            <mat-option value="moved">Movida</mat-option>
+            <mat-option value="exists">Duplicada</mat-option>
+            <mat-option value="error">Error</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Desde</mat-label>
+          <input matInput [matDatepicker]="fromPicker" formControlName="date_from">
+          <mat-datepicker-toggle matIconSuffix [for]="fromPicker"></mat-datepicker-toggle>
+          <mat-datepicker #fromPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Hasta</mat-label>
+          <input matInput [matDatepicker]="toPicker" formControlName="date_to">
+          <mat-datepicker-toggle matIconSuffix [for]="toPicker"></mat-datepicker-toggle>
+          <mat-datepicker #toPicker></mat-datepicker>
+        </mat-form-field>
+      </form>
+
+      <div class="filters-actions">
+        <button mat-stroked-button (click)="clearFilters()">Limpiar</button>
+        <button mat-raised-button color="primary" (click)="onSearch()">
+          <mat-icon>search</mat-icon>
+          Buscar
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="table-card">
+    <mat-card-content>
+      @if (loading()) {
+        <div class="loading-container">
+          <mat-spinner></mat-spinner>
+          <p>Cargando facturas...</p>
+        </div>
+      } @else if (invoices().length === 0) {
+        <div class="empty-state">
+          <mat-icon>inbox</mat-icon>
+          <h3>No hay facturas para mostrar</h3>
+          <p>Prueba ajustar los filtros o refrescar el listado</p>
+          <button mat-raised-button color="primary" (click)="openUploadDialog()">
+            <mat-icon>upload_file</mat-icon>
+            Subir facturas
+          </button>
+        </div>
+      } @else {
+        <div class="table-container">
+          <table mat-table [dataSource]="invoices()" class="invoices-table">
+            <ng-container matColumnDef="file_name">
+              <th mat-header-cell *matHeaderCellDef>Archivo</th>
+              <td mat-cell *matCellDef="let invoice">
+                <div class="file-name">
+                  <mat-icon>picture_as_pdf</mat-icon>
+                  <span>{{ invoice.file_name }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="code">
+              <th mat-header-cell *matHeaderCellDef>Codigo</th>
+              <td mat-cell *matCellDef="let invoice">
+                <span>{{ invoice.code || '-' }}</span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="category">
+              <th mat-header-cell *matHeaderCellDef>Categoria</th>
+              <td mat-cell *matCellDef="let invoice">
+                <mat-chip>{{ invoice.category || '-' }}</mat-chip>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Estado</th>
+              <td mat-cell *matCellDef="let invoice">
+                <mat-chip [class]="statusClass(invoice.status)">
+                  {{ statusLabel(invoice.status) }}
+                </mat-chip>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="processed_at">
+              <th mat-header-cell *matHeaderCellDef>Procesada</th>
+              <td mat-cell *matCellDef="let invoice">
+                {{ formatDate(invoice.processed_at) }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="size">
+              <th mat-header-cell *matHeaderCellDef>Tamano</th>
+              <td mat-cell *matCellDef="let invoice">
+                {{ formatSize(invoice.size) }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Acciones</th>
+              <td mat-cell *matCellDef="let invoice">
+                <button
+                  mat-icon-button
+                  color="primary"
+                  (click)="openDetail(invoice)"
+                  matTooltip="Ver detalle">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  color="accent"
+                  (click)="openPdf(invoice, $event)"
+                  matTooltip="Ver PDF">
+                  <mat-icon>picture_as_pdf</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr
+              mat-row
+              *matRowDef="let row; columns: displayedColumns;"
+              class="invoice-row"
+              (click)="openDetail(row)">
+            </tr>
+          </table>
+        </div>
+
+        <mat-paginator
+          [length]="meta()?.total || 0"
+          [pageSize]="pageSize()"
+          [pageIndex]="pageIndex()"
+          [pageSizeOptions]="[10, 25, 50, 100]"
+          (page)="onPageChange($event)">
+        </mat-paginator>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

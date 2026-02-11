@@ -12,6 +12,18 @@ export const FINANCE_ROUTES: Routes = [
         loadComponent: () =>
           import('./pages/billing').then(c => c.Billing),
         data: { title: 'Facturas y pagos' }
+      },
+      {
+        path: 'john-deere',
+        loadComponent: () =>
+          import('./pages/john-deere-payments/john-deere-payments').then(c => c.JohnDeerePaymentsComponent),
+        data: { title: 'Pagos John Deere' }
+      },
+      {
+        path: 'invoices',
+        loadComponent: () =>
+          import('./pages/john-deere-invoices/john-deere-invoices').then(c => c.JohnDeereInvoicesComponent),
+        data: { title: 'Facturas John Deere' }
       }
     ]
   }

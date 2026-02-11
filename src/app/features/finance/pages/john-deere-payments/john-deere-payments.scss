@@ -1,0 +1,275 @@
+.john-deere-container {
+  padding: 20px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  .title-section {
+    h1 {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0;
+      font-size: 24px;
+      color: var(--text-strong);
+
+      mat-icon {
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+        color: var(--brand-primary);
+      }
+    }
+
+    p {
+      margin: 4px 0 0 44px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+  }
+
+  button {
+    height: 38px;
+    padding: 0 18px;
+  }
+}
+
+.stat-card,
+.table-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  box-shadow: var(--elev-1);
+}
+
+// Estadísticas
+.filters-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  box-shadow: var(--elev-1);
+  margin-bottom: 24px;
+
+  .filters-grid {
+    display: grid;
+    grid-template-columns: minmax(240px, 520px);
+    gap: 12px;
+  }
+
+  .filters-options {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .filters-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+}
+
+.stats-loading {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+
+  .stat-card {
+    mat-card-content {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px !important;
+    }
+
+    .stat-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #edf5e9;
+
+      mat-icon {
+        font-size: 22px;
+        width: 22px;
+        height: 22px;
+        color: var(--brand-primary);
+      }
+
+      &.ordenes { background: #fff4d8; }
+      &.dolares { background: #e9f0fb; }
+      &.pesos { background: #e9f7ee; }
+    }
+
+    .stat-info {
+      flex: 1;
+
+      .stat-value {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text-strong);
+        line-height: 1.2;
+      }
+
+      .stat-label {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-top: 4px;
+      }
+    }
+  }
+}
+
+// Tabla
+.table-card {
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    gap: 16px;
+
+    p {
+      color: var(--text-muted);
+    }
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+
+    mat-icon {
+      font-size: 72px;
+      width: 72px;
+      height: 72px;
+      color: var(--text-muted);
+      opacity: 0.5;
+    }
+
+    h3 {
+      margin: 16px 0 8px;
+      color: var(--text-strong);
+    }
+
+    p {
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+  }
+}
+
+.table-container {
+  overflow-x: auto;
+  border-radius: 12px;
+}
+
+.recibos-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  th {
+    background-color: #f6f7f2;
+    font-weight: 700;
+    color: var(--text-strong);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #edf0e7;
+    font-size: 14px;
+  }
+
+  .recibo-row {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #f4f8ee;
+    }
+  }
+
+  .recibo-row:last-child td {
+    border-bottom: 0;
+  }
+
+  mat-chip {
+    min-height: 24px;
+    font-size: 13px;
+    background: #f2f4ef;
+    color: var(--text-normal);
+    border: 1px solid var(--border-soft);
+  }
+
+  button[mat-icon-button] {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+  }
+
+  button[mat-icon-button]:hover {
+    background: #eef3e6;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .john-deere-container {
+    padding: 16px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-card {
+    .filters-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .table-container {
+    .recibos-table {
+      font-size: 14px;
+
+      th, td {
+        padding: 8px;
+      }
+    }
+  }
+}

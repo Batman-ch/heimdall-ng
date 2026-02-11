@@ -1,0 +1,196 @@
+<div class="john-deere-container">
+  <!-- Cabecera con estadísticas -->
+  <div class="header">
+    <div class="title-section">
+      <h1>
+        <mat-icon>receipt_long</mat-icon>
+        Pagos John Deere
+      </h1>
+      <p>Gestión de recibos de pago y órdenes</p>
+    </div>
+
+    <button mat-raised-button color="primary" (click)="openUploadDialog()">
+      <mat-icon>upload_file</mat-icon>
+      Cargar PDF
+    </button>
+  </div>
+
+  <!-- Cards de estadísticas -->
+  @if (loadingStats()) {
+    <div class="stats-loading">
+      <mat-spinner diameter="30"></mat-spinner>
+    </div>
+  } @else if (stats()) {
+    <div class="stats-grid">
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon recibos">
+            <mat-icon>receipt</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats()!.total_recibos }}</div>
+            <div class="stat-label">Recibos</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon ordenes">
+            <mat-icon>list_alt</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats()!.total_ordenes }}</div>
+            <div class="stat-label">Órdenes</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon dolares">
+            <mat-icon>attach_money</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ formatCurrency(stats()!.suma_dolares) }}</div>
+            <div class="stat-label">Total USD</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon pesos">
+            <mat-icon>payments</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ formatCurrency(stats()!.suma_pesos) }}</div>
+            <div class="stat-label">Total ARS</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
+
+  <mat-card class="filters-card">
+    <mat-card-content>
+      <form [formGroup]="filtersForm" class="filters-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Buscar</mat-label>
+          <input matInput formControlName="query" placeholder="Recibo, cheque, concesionario, ordenes...">
+          <button matIconSuffix type="button" aria-label="Limpiar" (click)="clearFilters()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <div class="filters-options">
+          <span class="filters-label">Buscar en:</span>
+          <mat-checkbox formControlName="filter_recibo">Recibo #</mat-checkbox>
+          <mat-checkbox formControlName="filter_cheque">Cheque</mat-checkbox>
+          <mat-checkbox formControlName="filter_concesionario">Concesionario</mat-checkbox>
+          <mat-checkbox formControlName="filter_ordenes">Ordenes</mat-checkbox>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Tabla de recibos -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      @if (loading()) {
+        <div class="loading-container">
+          <mat-spinner></mat-spinner>
+          <p>Cargando recibos...</p>
+        </div>
+      } @else if (filteredRecibos().length === 0) {
+        <div class="empty-state">
+          <mat-icon>inbox</mat-icon>
+          <h3>No hay recibos para mostrar</h3>
+          <p>Prueba ajustar los filtros o cargar un PDF nuevo</p>
+        </div>
+      } @else {
+        <div class="table-container">
+          <table mat-table [dataSource]="filteredRecibos()" class="recibos-table">
+            
+            <!-- Número de Recibo -->
+            <ng-container matColumnDef="recibo_numero">
+              <th mat-header-cell *matHeaderCellDef>Recibo #</th>
+              <td mat-cell *matCellDef="let recibo">
+                <strong>{{ recibo.recibo_numero }}</strong>
+              </td>
+            </ng-container>
+
+            <!-- Fecha -->
+            <ng-container matColumnDef="fecha_recibo">
+              <th mat-header-cell *matHeaderCellDef>Fecha</th>
+              <td mat-cell *matCellDef="let recibo">
+                {{ formatDate(recibo.fecha_recibo) }}
+              </td>
+            </ng-container>
+
+            <!-- Cheque -->
+            <ng-container matColumnDef="cheque_numero">
+              <th mat-header-cell *matHeaderCellDef>Cheque</th>
+              <td mat-cell *matCellDef="let recibo">
+                {{ recibo.cheque_numero }}
+              </td>
+            </ng-container>
+
+            <!-- Concesionario -->
+            <ng-container matColumnDef="concesionario_numero">
+              <th mat-header-cell *matHeaderCellDef>Concesionario</th>
+              <td mat-cell *matCellDef="let recibo">
+                {{ recibo.concesionario_numero }}
+              </td>
+            </ng-container>
+
+            <!-- Cantidad de Órdenes -->
+            <ng-container matColumnDef="ordenes_count">
+              <th mat-header-cell *matHeaderCellDef>Órdenes</th>
+              <td mat-cell *matCellDef="let recibo">
+                <mat-chip>{{ recibo.ordenes_count }}</mat-chip>
+              </td>
+            </ng-container>
+
+            <!-- Total -->
+            <ng-container matColumnDef="total_recibo">
+              <th mat-header-cell *matHeaderCellDef>Total</th>
+              <td mat-cell *matCellDef="let recibo">
+                <strong>{{ formatCurrency(recibo.total_recibo) }}</strong>
+              </td>
+            </ng-container>
+
+            <!-- Acciones -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Acciones</th>
+              <td mat-cell *matCellDef="let recibo">
+                <button 
+                  mat-icon-button 
+                  color="primary" 
+                  (click)="openReciboDetail(recibo)"
+                  matTooltip="Ver detalle">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button 
+                  mat-icon-button 
+                  color="warn" 
+                  (click)="deleteRecibo(recibo, $event)"
+                  matTooltip="Eliminar recibo">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr 
+              mat-row 
+              *matRowDef="let row; columns: displayedColumns;"
+              class="recibo-row"
+              (click)="openReciboDetail(row)">
+            </tr>
+          </table>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>
